@@ -1,3 +1,6 @@
-[submodule "lib/wpdevtools-core"]
-	path = lib/wpdevtools-core
-	url = git@github.com:WPDevTools/wpdevtools-core.git
+[submodule "lib/codemirror2"]
+	path = lib/codemirror2
+	url = http://marijnhaverbeke.nl/git/codemirror2
+[submodule "lib/wpdt-core"]
+	path = lib/wpdt-core
+	url = git@github.com:WPDevTools/wpdt-core.git
