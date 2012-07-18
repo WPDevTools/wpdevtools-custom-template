@@ -8,7 +8,7 @@ Version: 0.1
 Author URI: http://wpdevtools.com/
 */
 
-require_once dirname( __FILE__ ) . '/lib/wpdevtools-core/wpdevtools-core.php';
+require_once dirname( __FILE__ ) . '/lib/wpdt-core/shortcodes.php';
 
 /**
  * variable description
@@ -25,7 +25,7 @@ $wpdt_script_queue = array();
  * 
  * @author Christopher Frazier, David Sutoyo
  */
-class WPDT_CustomTemplate extends WPDT_Core
+class WPDT_CustomTemplate
 {
 
 	/**
@@ -89,8 +89,8 @@ class WPDT_CustomTemplate extends WPDT_Core
 						$wpdt_script_queue[$post->post_type] = "<style>\n" . $template_meta['css'][0] . "\n</style>\n";
 						$wpdt_script_queue[$post->post_type] .= "\n<script type=\"text/javascript\">\n" . $template_meta['js'][0] . "\n</script>\n";
 
-						$post->post_content = self::replace_template_tags($template_query->post->post_content, $post_values);
-						$post->post_excerpt = self::replace_template_tags($template_query->post->post_excerpt, $post_values);
+						$post->post_content = WPDT_Shortcodes::replace_template_tags($template_query->post->post_content, $post_values);
+						$post->post_excerpt = WPDT_Shortcodes::replace_template_tags($template_query->post->post_excerpt, $post_values);
 						
 					}
 				}
@@ -168,12 +168,12 @@ class WPDT_CustomTemplate extends WPDT_Core
 		
 		if (is_admin() && (($pagenow == 'post.php' && get_post_type($post->ID) == 'custom_template') || ($pagenow == 'post-new.php' && $_REQUEST['post_type'] == 'custom_template'))) {
 			// Set up the code coloring for the template admin
-			wp_enqueue_script("codemirror", plugins_url('/lib/codemirror/lib/codemirror.js', __FILE__));
-			wp_enqueue_style("codemirror", plugins_url('/lib/codemirror/lib/codemirror.css', __FILE__));
+			wp_enqueue_script("codemirror", plugins_url('/lib/codemirror2/lib/codemirror.js', __FILE__));
+			wp_enqueue_style("codemirror", plugins_url('/lib/codemirror2/lib/codemirror.css', __FILE__));
 
-			wp_enqueue_script("codemirror-mode-javascript", plugins_url('/lib/codemirror/mode/javascript.js', __FILE__));
-			wp_enqueue_script("codemirror-mode-css", plugins_url('/lib/codemirror/mode/css.js', __FILE__));
-			wp_enqueue_style("codemirror-theme-default", plugins_url('/lib/codemirror/theme/default.css', __FILE__));
+			wp_enqueue_script("codemirror-mode-javascript", plugins_url('/lib/codemirror2/mode/javascript/javascript.js', __FILE__));
+			wp_enqueue_script("codemirror-mode-css", plugins_url('/lib/codemirror2/mode/css/css.js', __FILE__));
+			wp_enqueue_style("codemirror-theme-default", plugins_url('/lib/codemirror2/theme/elegant.css', __FILE__));
 
 			wp_enqueue_script("custom_template_admin", plugins_url('/admin.js', __FILE__), false, 'jquery');
 
@@ -224,16 +224,7 @@ class WPDT_CustomTemplate extends WPDT_Core
 			"side", 
 			"low"
 		);
-		
-		add_contextual_help( 'custom_template', '<p>For complete support for this and all WPDevTools plugins, please visit our support website.</p>
-		<h4>Available Support Options</h4>
-		<ul>
-			<li><a href="#">Plugin Information</a></li>
-			<li><a href="#">Documentation</a></li>
-			<li><a href="#">Tips and Tricks</a></li>
-			<li><a href="#">Support Forums</a></li>
-			<li><a href="http://wpdevtools.com">WPDevTools Website</a></li>
-		</ul>');
+
 	}
 
 
@@ -332,11 +323,8 @@ class WPDT_CustomTemplate extends WPDT_Core
 
 <?php else : ?>
 
-		<div class="misc-pub-section">
-			<p><em>It looks like you don't have any custom content types set up.  To use the Custom Content Templates Plugin you will need some custom content types.  Try our Custom Content Plugin for <strong>free</strong>.</em></p>
-		</div>
 		<div class="misc-pub-section misc-pub-section-last">
-			<p><a href="#">Download the Custom Content Plugin</a></p>
+			<p><em>It looks like you don't have any custom content types set up.  To use the Custom Content Templates Plugin you will need some custom content types defined.</em></p>
 		</div>
 
 <?php endif; ?>
